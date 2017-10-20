@@ -11,7 +11,9 @@
             </span>
           </h1>
         </div>
-        <scroll ref="listContent" :data="sequenceList" class="list-content">
+        <scroll ref="listContent" :data="sequenceList" :refreshDelay="refreshDelay" class="list-content">
+          <!-- 错误: 做动画变化高度大概要100ms 而上面传data只需要20ms
+          高度还没变化 而Scroll已经得到高度了 所以在scroll里加了个决定延迟的参数 refreshDelay -->
           <transition-group name="list" tag="ul">
             <li :key="item.id" ref="listItem" class="item" v-for="(item,index) in sequenceList" @click="selectItem(item,index)">
               <i class="current" :class="getCurrentIcon(item)"></i>
@@ -53,7 +55,8 @@
     mixins: [playerMixin],
     data() {
       return {
-        showFlag: false
+        showFlag: false,
+        refreshDelay: 100
       }
     },
     computed: {

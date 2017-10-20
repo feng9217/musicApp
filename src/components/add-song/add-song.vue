@@ -18,7 +18,7 @@
               <song-list :songs="playHistory" @select="selectSong"></song-list>
             </div>
           </scroll>
-          <scroll ref="searchList" class="list-scroll" v-if="currentIndex===1" :data="searchHistory">
+          <scroll ref="searchList" :refreshDelay="refreshDelay" class="list-scroll" v-if="currentIndex===1" :data="searchHistory">
             <div class="list-inner">
               <search-list @delete="deleteSearchHistory"
               @select="addQuery"
@@ -35,6 +35,12 @@
         @listScroll="blurInput"
         ></suggest>
       </div>
+      <top-tip ref="topTip">
+        <div class="tip-title">
+          <i class="icon-ok"></i>
+          <span class="text">1首歌曲已经添加到播放队列</span>
+        </div>
+      </top-tip>
     </div>
   </transition>
 </template>
@@ -49,6 +55,7 @@
   import SongList from 'base/song-list/song-list'
   import Song from 'common/js/song'
   import SearchList from 'base/search-list/search-list'
+  import TopTip from 'base/top-tip/top-tip'
 
   export default {
     mixins: [searchMixin],
@@ -65,6 +72,7 @@
           {name: '最近播放'},
           {name: '搜索历史'}
         ]
+        // refreshDelay: 100
       }
     },
     computed: {
@@ -89,6 +97,7 @@
       // 记录搜索结果
       selectSugguest() {
         this.saveSearch()
+        this.showTip()
       },
       switchItem(index) {
         this.currentIndex = index
@@ -99,7 +108,12 @@
           // 而是需要转换以后才能使用 参数song
           // 所以不能 this.insertSong(song)
           this.insertSong(new Song(song))
+          this.showTip()
         }
+      },
+      // 操作后的顶部提示交互
+      showTip() {
+        this.$refs.topTip.show()
       },
       ...mapActions([
         'insertSong'
@@ -111,7 +125,8 @@
       Switches,
       Scroll,
       SongList,
-      SearchList
+      SearchList,
+      TopTip
     }
   }
 </script>

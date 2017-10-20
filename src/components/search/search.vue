@@ -4,7 +4,7 @@
       <search-box ref="searchBox" @query="onQueryChange"></search-box>
     </div>
     <div ref="shortcutWrapper" class="shortcut-wrapper" v-show="!query">
-      <scroll class="shortcut" :data="shortCutHeight" ref="shortcut">
+      <scroll :refreshDelay="refreshDelay" class="shortcut" :data="shortCutHeight" ref="shortcut">
           <!-- 因为scroll只会根据第一个子内容的高度判断是否应该滚动
           所以只能再包个div -->
         <div>
@@ -55,6 +55,7 @@
     data() {
       return {
         hotkey: []
+        // refreshDelay: 100
         // mixin了
         // query: ''
       }
