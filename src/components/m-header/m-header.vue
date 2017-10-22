@@ -3,6 +3,7 @@
     我是m-header 哈哈哈
     <div class="icon"></div>
     <h1 class="text">Musy Music</h1>
+    <!-- user-center入口 -->
     <router-link tag="div" class="mine" to="/user">
       <i class="icon-mine"></i>
     </router-link>

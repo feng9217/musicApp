@@ -69,7 +69,8 @@
             <i @click="next" class="icon-next"></i>
           </div>
           <div class="icon i-right">
-            <i class="icon icon-not-favorite"></i>
+            <!-- 由于播放内核和播放收藏列表关于这个收藏ICON的逻辑和操作都相通 所以可以mixin复用 -->
+            <i class="icon" :class="getFavoriteIcon(currentSong)" @click="toggleFavorite(currentSong)"></i>
           </div>
         </div>
       </div>

@@ -9,7 +9,7 @@
 // 通过这几个文件 可以定义数据 并将其映射到组件中 以及修改这些数据的方法
 // state -> getters -> (actions) -> mutation-type -> mutations -> state
 import {playMode} from '../common/js/config'
-import {loadSearch, loadPlay} from '../common/js/cache'
+import {loadSearch, loadPlay, loadFavorite} from '../common/js/cache'
 
 const state = {
   singer: {},
@@ -32,7 +32,8 @@ const state = {
   // 替换成从本地存储读取初始值
   searchHistory: loadSearch(),
   // 读写都从缓存里操作
-  playHistory: loadPlay()
+  playHistory: loadPlay(),
+  favoriteList: loadFavorite()
 }
 
 export default state

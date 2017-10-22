@@ -9,6 +9,9 @@ const SEARCH_MAX_LENGTH = 15
 const PLAY_KEY = '__play__'
 const PLAY_MAX_LENGTH = 200
 
+const FAVORITE_KEY = '__favorite__'
+const FAVORITE_MAX_LENGTH = 200
+
 // 每插入一个数据都会放到数组前面
 // 所以要进行各种边界判断
 // 是否有重复数据 然后删除
@@ -25,6 +28,12 @@ function insertArray(arr, val, compare, maxLen) {
   if (index > 0) {
     arr.splice(index, 1)
   }
+  // unshift() 方法可向数组的开头添加一个或更多元素
+  // 并返回新的长度(返回值)
+  // 栈数据结构的访问规则是LIFO(后进先出)
+  // 所以从数组前端取得项 就需要 shift()
+  // unshift() 就是shift()的相反用途
+  // 是往前端添加 并返回新数组长度
   arr.unshift(val)
   // 并且弹出超过数组长度的元素
   if (maxLen && arr.length > maxLen) {
@@ -74,6 +83,7 @@ export function clearSearch() {
 export function savePlay(song) {
   // 获取当前列表 没有就得到[]
   let songs = storage.get(PLAY_KEY, [])
+  // 执行插入操作
   insertArray(songs, song, (item) => {
     return item.id === song.id
   }, PLAY_MAX_LENGTH)
@@ -84,4 +94,27 @@ export function savePlay(song) {
 
 export function loadPlay() {
   return storage.get(PLAY_KEY, [])
+}
+
+export function saveFavorite(song) {
+  let songs = storage.get(FAVORITE_KEY, [])
+  insertArray(songs, song, (item) => {
+    return song.id === item.id
+  }, FAVORITE_MAX_LENGTH)
+  storage.set(FAVORITE_KEY, songs)
+  return songs
+}
+
+export function deleteFavorite(song) {
+  let songs = storage.get(FAVORITE_KEY, [])
+  deleteFromArray(songs, (item) => {
+    return song.id === item.id
+  })
+  storage.set(FAVORITE_KEY, songs)
+  return songs
+}
+
+// 初始加载所有的 FavoriteList
+export function loadFavorite() {
+  return storage.get(FAVORITE_KEY, [])
 }
