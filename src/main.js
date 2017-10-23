@@ -17,6 +17,14 @@ import './common/stylus/icon.styl'
 // 取消移动端点击300ms的延时
 fastclick.attach(document.body)
 
+// 微信前端团队开源的vconsole
+// 移动端也能有console.log信息
+// import后腰规避ES6语法检查 不然引入不用会报错
+// 代理了浏览器的 console.log 不需要在手机端调试则直接注释掉
+/* eslint-disable no-unused-vars */
+// import vConsole from 'vconsole'
+// console.log('this is for mobile')
+
 // 调用 传参 默认图片
 // 使用的时候使用指令 v-lazy
 Vue.use(VueLazyLoad, {
