@@ -97,8 +97,9 @@
     </div>
     </transition>
     <playlist ref="playlist"></playlist>
+    <!-- 要保证play以后才执行ready 所以不能用@canplay="ready" -->
     <audio ref="audio" :src="currentSong.url"
-           @canplay="ready"
+           @play="ready"
            @error="error"
            @timeupdate="updateTime"
            @ended="end"></audio>
@@ -284,6 +285,8 @@
         // 歌单只有一首歌的边界情况
         if (this.playlist.length === 1) {
           this.loop()
+          // 不需要再设置播放位
+          return
         }
         // 下一首 到最后一首的时候回跳到第一首
         let index = this.currentIndex + 1
@@ -306,6 +309,8 @@
         // 歌单只有一首歌的边界情况
         if (this.playlist.length === 1) {
           this.loop()
+          // 不需要再设置播放位
+          return
         }
         // 上一首 到第一首的时候 跳转到最后一首
         let index = this.currentIndex - 1
@@ -420,7 +425,14 @@
       getLyric() {
         // 把获取回来的长字符串装进 类 里
         // 当前实例
+        // getLyric() 是异步操作 可能执行回调的时候就已经切到下一首歌了
+        // 所以可能有两个new Lyric同时存在
+        // 所以要判断 currentSong 是不是变了
         this.currentSong.getLyric().then((lyric) => {
+          if (this.currentSong.lyric !== lyric) {
+            return
+          }
+          // 判断后再实例化 lyric
           this.currentLyric = new Lyric(lyric, this.handleLyric)
           if (this.playing) {
             this.currentLyric.play()
@@ -544,13 +556,23 @@
         // 清空之前歌词及其计时器
         if (this.currentLyric) {
           this.currentLyric.stop()
+          this.currentTime = 0
+          this.playingLyric = ''
+          this.currentLineNum = 0
         }
         // 直接调用play()的同时还会请求src 会报错
         // 所以要加个延时 确保DOM获取了src后才play()
         // $nextTick $nextTick $nextTick
         // 手机后台切到前台 需要更大延时保证能继续播放
         // 所以把 this.$nextTick 改成 setTimeout
-        setTimeout(() => {
+        // 为了优化 还要确保无论 短时间内 currentSong执行多少次
+        // 但是setTimeout只执行最后一次
+        clearTimeout(this.timer)
+        // 然而 play() 是同步方法
+        // getLyric() 是异步操作 可能执行回调的时候就已经切到下一首歌了
+        // 所以可能有两个new Lyric同时存在
+        // 修复 迅速连续切歌后暂停 带来的歌词异常
+        this.timer = setTimeout(() => {
           this.$refs.audio.play()
           // 返回来的歌词是一个base64字符串
           // 需要第三方库解码
