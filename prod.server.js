@@ -1,6 +1,7 @@
 // 项目编译用到的文件
 // 小型的server
 // 先 npm run build
+// npm run build好了以后 就可以 node prod.server.js 来启动服务器
 
 var express = require('express')
 var config = require('./config/index')
@@ -76,7 +77,5 @@ module.export = app.listen(port, function(err) {
     console.log(err)
     return
   }
-  console.log('Listening an http://localhost:' + '\')
+  console.log('Listening an http://localhost:' + port + '\n')
 })
-
-// npm run build好了以后 就可以 node prod.server.js 来启动服务器
