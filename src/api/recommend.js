@@ -17,6 +17,7 @@
       uin: 0,
       needNewCode: 1
     })
+    // 带有 Promise 的封装
     return jsonp(url, data, options)
   }
 

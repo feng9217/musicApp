@@ -86,6 +86,7 @@
         // 传递给mutation
         this.setDisc(item)
       },
+      // 获取轮播图的后台数据
       _getRecommend() {
         getRecommend().then((res) => {
           if (res.code === ERR_OK) {
