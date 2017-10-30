@@ -28,63 +28,63 @@ https://c.y.qq.com/musichall/fcgi-bin/fcg_yqqhomepagerecommend.fcg?g_tk=19280934
 }  
 
 slider组件使用了slot插槽, 由:
-  `<div class="slider" ref="slider">`
-    `<div class="slider-group" ref="sliderGroup">`
-      `<slot></slot>`
-    `</div>`
-    `<div class="dots">`
-      `<span class="dot"`
-            `v-for="(item, index) in dots"`
-            `:class="{active: currentPageIndex === index}">`
-      `</span>`
-    `</div>`
-  `</div>`
+  `<div class="slider" ref="slider">`  
+    `<div class="slider-group" ref="sliderGroup">`  
+      `<slot></slot>`  
+    `</div>`  
+    `<div class="dots">`  
+      `<span class="dot"`  
+            `v-for="(item, index) in dots"`  
+            `:class="{active: currentPageIndex === index}">`  
+      `</span>`  
+    `</div>`  
+  `</div>`  
 构成, 而在 recommend.vue 中, slot插入了:
-  `<div v-for="item in recommends">`
-    `<a :href="item.linkUrl">`
-      `<!-- 组件冲突 各种和fastclick 所以加个class来解决 -->`
-        `<!-- fastclick监听到点击事件 发现class上有needsclick`
-        就不会去拦截这个过程 -->
-      `<img class="needsclick" @load="loadImage" :src="item.picUrl">`
-    `</a>`
-  `</div>`
+  `<div v-for="item in recommends">`  
+    `<a :href="item.linkUrl">`  
+      `<!-- 组件冲突 各种和fastclick 所以加个class来解决 -->`  
+        `<!-- fastclick监听到点击事件 发现class上有needsclick`  
+        `就不会去拦截这个过程 -->`  
+      `<img class="needsclick" @load="loadImage" :src="item.picUrl">`  
+    `</a>`  
+  `</div>`  
   
 把slot替换掉, 整体结构就为:
 
-`<div class="slider-wrapper" v-if="recommends.length" ref="sliderWrapper">`
-  `<div class="slider" ref="slider">`
-    `<div class="slider-group" ref="sliderGroup">`
-      `<!-- slot插槽 slider包裹的dom都会被插入这个插槽内 -->`
-      `<div v-for="item in recommends">`
-        `<a :href="item.linkUrl">`
-          `<!-- 组件冲突 各种和fastclick 所以加个class来解决 -->`
-            `<!-- fastclick监听到点击事件 发现class上有needsclick`
-            `就不会去拦截这个过程 -->`
-          `<img class="needsclick" @load="loadImage" :src="item.picUrl">`
-        `</a>`
-      `</div>`
-    `</div>`
-    `<div class="dots">`
-      `<span class="dot"`
-            `v-for="(item, index) in dots"`
-            `:class="{active: currentPageIndex === index}">`
-     ` </span>`
-    `</div>`
-  `</div>`
-`</div>`
-
+`<div class="slider-wrapper" v-if="recommends.length" ref="sliderWrapper">`  
+  `<div class="slider" ref="slider">`  
+    `<div class="slider-group" ref="sliderGroup">`  
+      `<!-- slot插槽 slider包裹的dom都会被插入这个插槽内 -->`  
+      `<div v-for="item in recommends">`  
+        `<a :href="item.linkUrl">`  
+          `<!-- 组件冲突 各种和fastclick 所以加个class来解决 -->`  
+            `<!-- fastclick监听到点击事件 发现class上有needsclick`  
+            `就不会去拦截这个过程 -->`  
+          `<img class="needsclick" @load="loadImage" :src="item.picUrl">`  
+        `</a>`  
+      `</div>`  
+    `</div>`  
+    `<div class="dots">`  
+      `<span class="dot"`  
+            `v-for="(item, index) in dots"`  
+            `:class="{active: currentPageIndex === index}">`  
+     ` </span>`  
+    `</div>`  
+  `</div>`  
+`</div>`  
+  
 其中 recommends 就是经处理返回的data.slider数据:`
-  `_getRecommend() {`
-    `getRecommend().then((res) => {`
-      `if (res.code === ERR_OK) {`
-        `console.log(res.data.slider)`
-        `this.recommends = res.data.slider`
- `     }`
-  `  })`
-`  }`
-
+  `_getRecommend() {`  
+    `getRecommend().then((res) => {`  
+      `if (res.code === ERR_OK) {`  
+        `console.log(res.data.slider)`  
+        `this.recommends = res.data.slider`  
+ `     }`  
+  `  })`  
+`  }`  
+  
 而 getRecommend() 是封装好的处理函数, 就是把url、data(使用Object.assign把公共参数commonParams和私有参数都返回到一个对象中)、options传入到封装好的 jsonp方法 中:
-`
+  
 export function getRecommend() {
     const url = 'https://c.y.qq.com/musichall/fcgi-bin/fcg_yqqhomepagerecommend.fcg'
     const data = Object.assign({}, commonParams, {
@@ -94,9 +94,9 @@ export function getRecommend() {
     })
     return jsonp(url, data, options)
   }
-`
+  
 因为是跨域获取数据 所以jsonp是封装好的, 使用了 第三方库jsonp , 以及拼接url的方法param, 使用了 Promise 进行封装, 做成异步的返回数据:
-`
+  
   import OriginJsonp from 'jsonp'
 
   export default function jsonp(url, data, option) {
@@ -128,7 +128,7 @@ export function getRecommend() {
   // 如果该url有data的话就要把第一个&去掉 没有就返回空
   return url ? url.substring(1) : ''
   }
-`
+  
 
 ##__功能实现__
 
