@@ -27,61 +27,61 @@ https://c.y.qq.com/musichall/fcgi-bin/fcg_yqqhomepagerecommend.fcg?g_tk=19280934
   }  
 }  
 
-slider组件使用了slot插槽, 由:`
-  <div class="slider" ref="slider">
-    <div class="slider-group" ref="sliderGroup">
-      <slot></slot>
-    </div>
-    <div class="dots">
-      <span class="dot"
-            v-for="(item, index) in dots"
-            :class="{active: currentPageIndex === index}">
-      </span>
-    </div>
-  </div>`
-构成, 而在 recommend.vue 中, slot插入了:`
-  <div v-for="item in recommends">
-    <a :href="item.linkUrl">
-      <!-- 组件冲突 各种和fastclick 所以加个class来解决 -->
-        <!-- fastclick监听到点击事件 发现class上有needsclick
+slider组件使用了slot插槽, 由:
+  `<div class="slider" ref="slider">`
+    `<div class="slider-group" ref="sliderGroup">`
+      `<slot></slot>`
+    `</div>`
+    `<div class="dots">`
+      `<span class="dot"`
+            `v-for="(item, index) in dots"`
+            `:class="{active: currentPageIndex === index}">`
+      `</span>`
+    `</div>`
+  `</div>`
+构成, 而在 recommend.vue 中, slot插入了:
+  `<div v-for="item in recommends">`
+    `<a :href="item.linkUrl">`
+      `<!-- 组件冲突 各种和fastclick 所以加个class来解决 -->`
+        `<!-- fastclick监听到点击事件 发现class上有needsclick`
         就不会去拦截这个过程 -->
-      <img class="needsclick" @load="loadImage" :src="item.picUrl">
-    </a>
-  </div>`
+      `<img class="needsclick" @load="loadImage" :src="item.picUrl">`
+    `</a>`
+  `</div>`
   
 把slot替换掉, 整体结构就为:
 
-<div class="slider-wrapper" v-if="recommends.length" ref="sliderWrapper">
-  <div class="slider" ref="slider">
-    <div class="slider-group" ref="sliderGroup">
-      <!-- slot插槽 slider包裹的dom都会被插入这个插槽内 -->
-      <div v-for="item in recommends">
-        <a :href="item.linkUrl">
-          <!-- 组件冲突 各种和fastclick 所以加个class来解决 -->
-            <!-- fastclick监听到点击事件 发现class上有needsclick
-            就不会去拦截这个过程 -->
-          <img class="needsclick" @load="loadImage" :src="item.picUrl">
-        </a>
-      </div>
-    </div>
-    <div class="dots">
-      <span class="dot"
-            v-for="(item, index) in dots"
-            :class="{active: currentPageIndex === index}">
-      </span>
-    </div>
-  </div>
-</div>
+`<div class="slider-wrapper" v-if="recommends.length" ref="sliderWrapper">`
+  `<div class="slider" ref="slider">`
+    `<div class="slider-group" ref="sliderGroup">`
+      `<!-- slot插槽 slider包裹的dom都会被插入这个插槽内 -->`
+      `<div v-for="item in recommends">`
+        `<a :href="item.linkUrl">`
+          `<!-- 组件冲突 各种和fastclick 所以加个class来解决 -->`
+            `<!-- fastclick监听到点击事件 发现class上有needsclick`
+            `就不会去拦截这个过程 -->`
+          `<img class="needsclick" @load="loadImage" :src="item.picUrl">`
+        `</a>`
+      `</div>`
+    `</div>`
+    `<div class="dots">`
+      `<span class="dot"`
+            `v-for="(item, index) in dots"`
+            `:class="{active: currentPageIndex === index}">`
+     ` </span>`
+    `</div>`
+  `</div>`
+`</div>`
 
 其中 recommends 就是经处理返回的data.slider数据:`
-  _getRecommend() {
-    getRecommend().then((res) => {
-      if (res.code === ERR_OK) {
-        console.log(res.data.slider)
-        this.recommends = res.data.slider
-      }
-    })
-  }`
+  `_getRecommend() {`
+    `getRecommend().then((res) => {`
+      `if (res.code === ERR_OK) {`
+        `console.log(res.data.slider)`
+        `this.recommends = res.data.slider`
+ `     }`
+  `  })`
+`  }`
 
 而 getRecommend() 是封装好的处理函数, 就是把url、data(使用Object.assign把公共参数commonParams和私有参数都返回到一个对象中)、options传入到封装好的 jsonp方法 中:
 `
@@ -145,7 +145,7 @@ export function getRecommend() {
 
   其中20是浏览器刷新时间
 
-===== dots区块 =====
+###_dots区块_
 
 对于轮播图小点的控制
 首先是初始化, 确定小点的个数, 在生命周期钩子函数 mounted(){} 中, 执行 _initDots(), 初始化dots, 因为数组带有index信息, 所以选择生成数组:
