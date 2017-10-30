@@ -26,17 +26,20 @@
         currentPageIndex: 0
       }
     },
-    // 设置轮播的间隔和外部控制
+    // 设置props 使组件可以由外部数据控制
     // 这里用第三方库 better-scroll 实现轮播
     props: {
+      // 循环轮播与否
       loop: {
         type: Boolean,
         default: true
       },
+      // 自动轮播与否
       autoPlay: {
         type: Boolean,
         default: true
       },
+      // 自动轮播间隔
       interval: {
         type: Number,
         default: 4000
@@ -95,6 +98,7 @@
         if (this.loop && !isResize) {
           width += 2 * sliderWidth
         }
+        console.log('refs引用:' + this.$refs.sliderGroup)
         this.$refs.sliderGroup.style.width = width + 'px'
       },
       _initDots() {

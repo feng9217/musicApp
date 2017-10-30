@@ -2,7 +2,7 @@
   <div class="recommend" ref="recommend">
     <!-- 渲染过后还要监听歌单变化 重新加载scroll -->
     <scroll ref="scroll" class="recommend-content" :data="discList">
-      <!-- better-scroll的第一个子级才能滚动 -->
+      <!-- better-scroll的第一个子级才能滚动 所以使用一个div包完 slider + recommendList-->
       <div>
         <div class="slider-wrapper" v-if="recommends.length" ref="sliderWrapper">
         <slider>
