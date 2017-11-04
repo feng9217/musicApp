@@ -3,18 +3,18 @@
 丢给别人一个页面总比丢给别人一个App更容易接受吧????
 
 
-___<h1>Recommend页</h1>___
+_<h1>Recommend页</h1>_
 ***
-___<h2>结构</h2>___
+_<h2>结构</h2>_
 ***
 除了m-header 整个页面都可以滚动  
 所以使用了better-scroll第三方库包裹整个页面  
 又因 better-scroll 只有第一个子元素能滚动 所以用一个div将 slider + recommend-list 包裹起来  
 
 recommend > scroll.recommend-content > (slider + recommend-list)
-<h2>__slider part__</h2>
+_<h2>slider part</h2>_
 ***
-<h3>_数据来源/处理_</h3>
+_<h3>数据来源/处理</h3>_
 ***
 
 接口部分: 取的是QQ音乐的数据 有来自PC端网页版的 也有来自手机端的  
@@ -34,57 +34,12 @@ https://c.y.qq.com/musichall/fcgi-bin/fcg_yqqhomepagerecommend.fcg?g_tk=19280934
   }  
 }  
   
-其中 recommends 就是经处理返回的data.slider数据:`
-  `_getRecommend() {`  
-    `getRecommend().then((res) => {`  
-      `if (res.code === ERR_OK) {`  
-        `console.log(res.data.slider)`  
-        `this.recommends = res.data.slider`  
- `     }`  
-  `  })`  
-`  }`  
+封装了函数 _getRecommend() 来获取返回的数据, getRecommend() 是封装好的处理函数, 返回的是一个jsonp方法(带有Promise)  
   
-而 getRecommend() 是封装好的处理函数, 就是把url、data(使用Object.assign把公共参数commonParams和私有参数都返回到一个对象中)、options传入到封装好的 jsonp方法 中
+因为是跨域获取数据 所以需要使用跨域, 使用了 第三方库jsonp , 以及拼接url的方法param, 使用了 Promise 进行封装, 做成异步的返回数据  
   
-因为是跨域获取数据 所以jsonp是封装好的, 使用了 第三方库jsonp , 以及拼接url的方法param, 使用了 Promise 进行封装, 做成异步的返回数据:
-  
-  import OriginJsonp from 'jsonp'
-
-  export default function jsonp(url, data, option) {
-    // 没有 ? 就要先拼一个 ? 否则就是 & 最后 +data
-    url += (url.indexOf('?') < 0 ? '?' : '&') + param(data)
-    // 成功调用resolve 失败调用reject
-    return new Promise((resolve, reject) => {
-      OriginJsonp(url, option, (err, data) => {
-        if (!err) {
-          resolve(data)
-        } else {
-          reject(err)
-        }
-      })
-    })
-  }
-  
-  function param(data) {
-  let url = ''
-  // data一般为json对象 所以要遍历处理
-  for (let i in data) {
-    // 如果不为undefined就传进当前data[key] 否则为空(因为不能传undefined给后端)
-    let value = data[i] !== undefined ? data[i] : ''
-    // 开始拼接url ES6拼接语法
-    // & + key值 = encoreURI处理后的value
-    // 其中 ${} 为占位符 可以是任何js表达式或模板字符串 结果都作为字符串输出
-    url += `&${i}=${encodeURIComponent(value)}`
-  }
-  // 如果该url有data的话就要把第一个&去掉 没有就返回空
-  return url ? url.substring(1) : ''
-  }
-  
-
-
-
 ***
-<h3>_结构_</h3>
+_<h3>结构</h3>_
 ***
 slider组件使用了slot插槽, 由:
   `<div class="slider" ref="slider">`  
@@ -134,9 +89,9 @@ slider组件使用了slot插槽, 由:
 
 div.slider-wrapper > div.slider > div.sliderGroup > div v-for="item in data" > a > img
   
-<h3>__功能实现__</h3>
+_<h3>功能实现</h3>_
 
-<h4>_slider轮播图_</h4>
+_<h4>slider轮播图</h4>_
 
 之后通过 this.recommends = res.data.slider 接收返回的数据进行遍历
 而 slider.vue 的轮播滑动效果 是通过第三方库 better-scroll 实现的, 使用该库的关键点是初始化时计算的高度和宽度要正确, 即渲染时机要正确, 所以要:
@@ -149,7 +104,7 @@ div.slider-wrapper > div.slider > div.sliderGroup > div v-for="item in data" > a
 
   其中20是浏览器刷新时间
 
-<h4>_dots区块_</h4>
+_<h4>dots区块</h4>_
 
 对于轮播图小点的控制
 首先是初始化, 确定小点的个数, 在生命周期钩子函数 mounted(){} 中, 执行 _initDots(), 初始化dots, 因为数组带有index信息, 所以选择生成数组:
