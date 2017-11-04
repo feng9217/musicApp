@@ -5,19 +5,26 @@
 
 #___Recommend页___
 ***
+##___结构___
+***
+除了m-header 整个页面都可以滚动  
+所以使用了better-scroll第三方库包裹整个页面  
+又因 better-scroll 只有第一个子元素能滚动 所以用一个div将 slider + recommend-list 包裹起来  
+
+recommend > scroll.recommend-content > (slider + recommend-list)
 ##__slider part__
 ***
 ###_数据来源/处理_
 ***
 
-接口部分: 取的是QQ音乐的数据 有来自PC端网页版的 也有来自手机端的
+接口部分: 取的是QQ音乐的数据 有来自PC端网页版的 也有来自手机端的  
 
-首先是 Recommend.vue 的数据
+首先是 Recommend.vue 的数据  
 
-轮播图由组件 slider.vue 实现 数据来源为:
-https://c.y.qq.com/musichall/fcgi-bin/fcg_yqqhomepagerecommend.fcg?g_tk=1928093487&format=jsonp&inCharset=utf-8&outCharset=utf-8&notice=0&platform=h5&uin=0&needNewCode=1&jsonpCallback=__jp0
-
-结构为:
+轮播图由组件 slider.vue 实现 数据来源为:  
+https://c.y.qq.com/musichall/fcgi-bin/fcg_yqqhomepagerecommend.fcg?g_tk=1928093487&format=jsonp&inCharset=utf-8&outCharset=utf-8&notice=0&platform=h5&uin=0&needNewCode=1&jsonpCallback=__jp0  
+  
+结构为:  
 {  
   code: 0,  
   data: {  
@@ -26,7 +33,59 @@ https://c.y.qq.com/musichall/fcgi-bin/fcg_yqqhomepagerecommend.fcg?g_tk=19280934
     songList: [{}, {}, {}, {}, ......]  
   }  
 }  
+  
+其中 recommends 就是经处理返回的data.slider数据:`
+  `_getRecommend() {`  
+    `getRecommend().then((res) => {`  
+      `if (res.code === ERR_OK) {`  
+        `console.log(res.data.slider)`  
+        `this.recommends = res.data.slider`  
+ `     }`  
+  `  })`  
+`  }`  
+  
+而 getRecommend() 是封装好的处理函数, 就是把url、data(使用Object.assign把公共参数commonParams和私有参数都返回到一个对象中)、options传入到封装好的 jsonp方法 中
+  
+因为是跨域获取数据 所以jsonp是封装好的, 使用了 第三方库jsonp , 以及拼接url的方法param, 使用了 Promise 进行封装, 做成异步的返回数据:
+  
+  import OriginJsonp from 'jsonp'
 
+  export default function jsonp(url, data, option) {
+    // 没有 ? 就要先拼一个 ? 否则就是 & 最后 +data
+    url += (url.indexOf('?') < 0 ? '?' : '&') + param(data)
+    // 成功调用resolve 失败调用reject
+    return new Promise((resolve, reject) => {
+      OriginJsonp(url, option, (err, data) => {
+        if (!err) {
+          resolve(data)
+        } else {
+          reject(err)
+        }
+      })
+    })
+  }
+  
+  function param(data) {
+  let url = ''
+  // data一般为json对象 所以要遍历处理
+  for (let i in data) {
+    // 如果不为undefined就传进当前data[key] 否则为空(因为不能传undefined给后端)
+    let value = data[i] !== undefined ? data[i] : ''
+    // 开始拼接url ES6拼接语法
+    // & + key值 = encoreURI处理后的value
+    // 其中 ${} 为占位符 可以是任何js表达式或模板字符串 结果都作为字符串输出
+    url += `&${i}=${encodeURIComponent(value)}`
+  }
+  // 如果该url有data的话就要把第一个&去掉 没有就返回空
+  return url ? url.substring(1) : ''
+  }
+  
+
+
+
+***
+###_结构_
+***
 slider组件使用了slot插槽, 由:
   `<div class="slider" ref="slider">`  
     `<div class="slider-group" ref="sliderGroup">`  
@@ -72,62 +131,8 @@ slider组件使用了slot插槽, 由:
     `</div>`  
   `</div>`  
 `</div>`  
-  
-其中 recommends 就是经处理返回的data.slider数据:`
-  `_getRecommend() {`  
-    `getRecommend().then((res) => {`  
-      `if (res.code === ERR_OK) {`  
-        `console.log(res.data.slider)`  
-        `this.recommends = res.data.slider`  
- `     }`  
-  `  })`  
-`  }`  
-  
-而 getRecommend() 是封装好的处理函数, 就是把url、data(使用Object.assign把公共参数commonParams和私有参数都返回到一个对象中)、options传入到封装好的 jsonp方法 中:
-  
-export function getRecommend() {
-    const url = 'https://c.y.qq.com/musichall/fcgi-bin/fcg_yqqhomepagerecommend.fcg'
-    const data = Object.assign({}, commonParams, {
-      platform: 'h5',
-      uin: 0,
-      needNewCode: 1
-    })
-    return jsonp(url, data, options)
-  }
-  
-因为是跨域获取数据 所以jsonp是封装好的, 使用了 第三方库jsonp , 以及拼接url的方法param, 使用了 Promise 进行封装, 做成异步的返回数据:
-  
-  import OriginJsonp from 'jsonp'
 
-  export default function jsonp(url, data, option) {
-    // 没有 ? 就要先拼一个 ? 否则就是 & 最后 +data
-    url += (url.indexOf('?') < 0 ? '?' : '&') + param(data)
-    // 成功调用resolve 失败调用reject
-    return new Promise((resolve, reject) => {
-      OriginJsonp(url, option, (err, data) => {
-        if (!err) {
-          resolve(data)
-        } else {
-          reject(err)
-        }
-      })
-    })
-  }
-  
-  function param(data) {
-  let url = ''
-  // data一般为json对象 所以要遍历处理
-  for (let i in data) {
-    // 如果不为undefined就传进当前data[key] 否则为空(因为不能传undefined给后端)
-    let value = data[i] !== undefined ? data[i] : ''
-    // 开始拼接url ES6拼接语法
-    // & + key值 = encoreURI处理后的value
-    // 其中 ${} 为占位符 可以是任何js表达式或模板字符串 结果都作为字符串输出
-    url += `&${i}=${encodeURIComponent(value)}`
-  }
-  // 如果该url有data的话就要把第一个&去掉 没有就返回空
-  return url ? url.substring(1) : ''
-  }
+div.slider-wrapper > div.slider > div.sliderGroup > div v-for="item in data" > a > img
   
 
 ##__功能实现__

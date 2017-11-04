@@ -8,16 +8,16 @@
         <slider>
         <!-- 这些 dom节点 都会生成在 slot插槽中 -->
         <!-- 遍历获取的recommend数据 -->
-        <div v-for="item in recommends">
+          <div v-for="item in recommends">
           <!-- 根据返回的数据写的 linkUrl 和 picUrl -->
-          <a :href="item.linkUrl">
+            <a :href="item.linkUrl">
             <!-- 注意这里的 src 是 v-bind 的 -->
             <!-- 组件冲突 各种和fastclick 所以加个class来解决 -->
               <!-- fastclick监听到点击事件 发现class上有needsclick
               就不会去拦截这个过程 -->
-            <img class="needsclick" @load="loadImage" :src="item.picUrl">
-          </a>
-        </div>
+              <img class="needsclick" @load="loadImage" :src="item.picUrl">
+            </a>
+          </div>
         </slider>
         </div>
         <div class="recommend-list">
