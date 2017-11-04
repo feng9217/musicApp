@@ -41,53 +41,8 @@ https://c.y.qq.com/musichall/fcgi-bin/fcg_yqqhomepagerecommend.fcg?g_tk=19280934
 ***
 _<h3>结构</h3>_
 ***
-slider组件使用了slot插槽, 由:
-  `<div class="slider" ref="slider">`  
-    `<div class="slider-group" ref="sliderGroup">`  
-      `<slot></slot>`  
-    `</div>`  
-    `<div class="dots">`  
-      `<span class="dot"`  
-            `v-for="(item, index) in dots"`  
-            `:class="{active: currentPageIndex === index}">`  
-      `</span>`  
-    `</div>`  
-  `</div>`  
-构成, 而在 recommend.vue 中, slot插入了:
-  `<div v-for="item in recommends">`  
-    `<a :href="item.linkUrl">`  
-      `<!-- 组件冲突 各种和fastclick 所以加个class来解决 -->`  
-        `<!-- fastclick监听到点击事件 发现class上有needsclick`  
-        `就不会去拦截这个过程 -->`  
-      `<img class="needsclick" @load="loadImage" :src="item.picUrl">`  
-    `</a>`  
-  `</div>`  
-  
-把slot替换掉, 整体结构就为:
-
-`<div class="slider-wrapper" v-if="recommends.length" ref="sliderWrapper">`  
-  `<div class="slider" ref="slider">`  
-    `<div class="slider-group" ref="sliderGroup">`  
-      `<!-- slot插槽 slider包裹的dom都会被插入这个插槽内 -->`  
-      `<div v-for="item in recommends">`  
-        `<a :href="item.linkUrl">`  
-          `<!-- 组件冲突 各种和fastclick 所以加个class来解决 -->`  
-            `<!-- fastclick监听到点击事件 发现class上有needsclick`  
-            `就不会去拦截这个过程 -->`  
-          `<img class="needsclick" @load="loadImage" :src="item.picUrl">`  
-        `</a>`  
-      `</div>`  
-    `</div>`  
-    `<div class="dots">`  
-      `<span class="dot"`  
-            `v-for="(item, index) in dots"`  
-            `:class="{active: currentPageIndex === index}">`  
-     ` </span>`  
-    `</div>`  
-  `</div>`  
-`</div>`  
-
-div.slider-wrapper > div.slider > div.sliderGroup > div v-for="item in data" > a > img
+div.slider-wrapper > div.slider > div.sliderGroup > ( div v-for="item in data" > a > img )  
+括号内就是 slot 的内容  
   
 _<h3>功能实现</h3>_
 
