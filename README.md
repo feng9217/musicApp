@@ -3,18 +3,18 @@
 丢给别人一个页面总比丢给别人一个App更容易接受吧????
 
 
-#___Recommend页___
+<h1>___Recommend页___</h1>
 ***
-##___结构___
+<h2>___结构___</h2>
 ***
 除了m-header 整个页面都可以滚动  
 所以使用了better-scroll第三方库包裹整个页面  
 又因 better-scroll 只有第一个子元素能滚动 所以用一个div将 slider + recommend-list 包裹起来  
 
 recommend > scroll.recommend-content > (slider + recommend-list)
-##__slider part__
+<h2>__slider part__</h2>
 ***
-###_数据来源/处理_
+<h3>_数据来源/处理_</h3>
 ***
 
 接口部分: 取的是QQ音乐的数据 有来自PC端网页版的 也有来自手机端的  
@@ -84,7 +84,7 @@ https://c.y.qq.com/musichall/fcgi-bin/fcg_yqqhomepagerecommend.fcg?g_tk=19280934
 
 
 ***
-###_结构_
+<h3>_结构_</h3>
 ***
 slider组件使用了slot插槽, 由:
   `<div class="slider" ref="slider">`  
@@ -134,10 +134,9 @@ slider组件使用了slot插槽, 由:
 
 div.slider-wrapper > div.slider > div.sliderGroup > div v-for="item in data" > a > img
   
+<h3>__功能实现__</h3>
 
-##__功能实现__
-
-###_slider轮播图_
+<h4>_slider轮播图_</h4>
 
 之后通过 this.recommends = res.data.slider 接收返回的数据进行遍历
 而 slider.vue 的轮播滑动效果 是通过第三方库 better-scroll 实现的, 使用该库的关键点是初始化时计算的高度和宽度要正确, 即渲染时机要正确, 所以要:
@@ -150,7 +149,7 @@ div.slider-wrapper > div.slider > div.sliderGroup > div v-for="item in data" > a
 
   其中20是浏览器刷新时间
 
-###_dots区块_
+<h4>_dots区块_</h4>
 
 对于轮播图小点的控制
 首先是初始化, 确定小点的个数, 在生命周期钩子函数 mounted(){} 中, 执行 _initDots(), 初始化dots, 因为数组带有index信息, 所以选择生成数组:
