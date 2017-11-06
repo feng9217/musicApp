@@ -46,6 +46,8 @@
       }
     },
     // 要保证正确的初始化第三方库就应该使用 mounted钩子
+    // 但是由于是异步加载的数据 不能保证 mounted 前数据已经正确渲染
+    // 所以要在 dom 外层加上 v-if 确保有数据后才 mounted
     mounted() {
     // 为了保证DOM能成功渲染 一般都会加个延时
     // 可以用this.$nexttick
@@ -86,14 +88,16 @@
         let sliderWidth = this.$refs.slider.clientWidth
         for (let i = 0; i < this.children.length; i++) {
           let child = this.children[i]
-          // 给子元素加上class 确保正确渲染样式
+          // 给子元素动态绑定class 确保正确渲染样式
+          // addClass 是在 dom.js 封装好的
           addClass(child, 'slider-item')
           // 确保宽度
           // child宽度等于父容器宽度
           child.style.width = sliderWidth + 'px'
           width += sliderWidth
         }
-        // 如果 loop为true 则左右还需要加一块sliderWidth
+        // 如果 loop为true BS会左右各克隆一个dom
+        // 则左右还需要加一块sliderWidth
         // 确保轮播的时候无缝链接
         if (this.loop && !isResize) {
           width += 2 * sliderWidth
