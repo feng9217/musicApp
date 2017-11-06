@@ -45,11 +45,11 @@ https://c.y.qq.com/musichall/fcgi-bin/fcg_yqqhomepagerecommend.fcg?g_tk=19280934
   
 封装了函数 _getRecommend() 来获取返回的数据, getRecommend() 是封装好的处理函数, 返回的是一个jsonp方法(带有Promise)  
   
-因为是跨域获取数据 所以需要使用跨域, 使用了 第三方库jsonp , 以及拼接url的方法param, 使用了 Promise 进行封装, 做成异步的返回数据  
+因为是跨域获取数据, 所以使用了 第三方库jsonp, 以及拼接url的方法param, 使用了 Promise 进行封装, 做成异步的返回数据  
   
 ***
 <h3>结构</h3>
-***
+***  
 div.slider-wrapper v-if > div.slider = new BS(el, { param }) > div.sliderGroup > ( div v-for="item in data" > a > img )  
 div.sliderGroup{ position: relative } > div.dots > span.dot v-for="(item, index) in dots"
 括号内就是 slot 的内容  
@@ -59,7 +59,7 @@ div.sliderGroup{ position: relative } > div.dots > span.dot v-for="(item, index)
 <h4>slider轮播图</h4>
 
 之后通过 this.recommends = res.data.slider 接收返回的数据进行遍历
-而 slider.vue 的<em>轮播滑动效果 是通过第三方库 better-scroll 实现的, 使用该库的关键点是初始化时计算的高度和宽度要正确, 即渲染时机要正确,</em> 所以要:  
+而 slider.vue 的<strong>轮播滑动效果 是通过第三方库 better-scroll 实现的, 使用该库的关键点是初始化时计算的高度和宽度要正确, 即渲染时机要正确,</strong> 所以要:  
   mounted() {  
     setTimeout(() => {  
       this._setSliderWidth()  
@@ -69,9 +69,9 @@ div.sliderGroup{ position: relative } > div.dots > span.dot v-for="(item, index)
 PS: 其中20是浏览器刷新时间, 也可以用this.$nextstick, 而且一定要设置好宽/高后才能init better-scroll, 不然滚不了的  
   
 因为是用div遍历生成的轮播图, 所以要在样式上 float: left  
-让所有遍历出来的div都在同一行, 为了动态添加, 所以需要自己封装一个 addClass()函数, 添加样式的同时赋予宽度  
+让所有遍历出来的div都在同一行, 为了动态添加, 所以需要自己封装一个 addClass()函数, 添加样式的同时还要赋予宽度  
   
-在轮播元素(不管是li还是div)都在同一行后, 就可以通过dom操作:
+在轮播元素(不管是li还是div)都在同一行后, 就可以通过dom操作:  
 child.style.width = sliderWidth + 'px'  
 width += sliderWidth  
 this.$refs.sliderGroup.style.width = width + 'px'  
@@ -79,6 +79,23 @@ this.$refs.sliderGroup.style.width = width + 'px'
   
 当然还需要 this.slider = new BScroll(dom, {param}) 进行初始化  
 param就是控制滚动的参数  
+  
+实现滚动后, 就是要实现轮播。better-scroll每次滚动结束都会派发一个事件: scrollEnd, 轮播就是对这个事件进行监听, 并码回调函数。  
+轮播, 就是由当前页滚动至下一页, better-scroll有获取当前页的api, 对中间变量赋值:  
+<strong>let pageIndex = this.slider.getCurrentPage().pageX</strong>  
+之后就进行操作, 让页面滚动到下一页, 执行_play():  
+`this.currentPageIndex = pageIndex`  
+`if (this.autoPlay) {`  
+  `clearTimeout(this.timer)`  
+  `this._play()`  
+`}`  
+  
+_play()执行的就是滚动到下一页的操作, 每次执行, let pageIndex = this.currentPageIndex + 1, 在loop模式下, pageIndex += 1  
+之后使用一个 this.timer = setTimeout( () => {}, this.interval )  
+回调函数中, 执行了better-scroll的方法: goToPage(pageIndex, 0, 400) 对应的是: (X, Y, 切换时间)  
+
+***
+这样就完成了轮播操作, 其实整个 slider 部分都是可以封装起来复用的, 只要传入想要轮播的数据就OK。  
 
 <h4>dots区块</h4>
 
@@ -90,3 +107,7 @@ param就是控制滚动的参数
   }  
   
 而此处的 children 就是: this.children = this.$refs.sliderGroup.children 即轮播图的个数。  
+  
+当轮播图滚动, 会给对应的dot绑定上 active 样式:  
+`:class="{active: currentPageIndex === index}"`  
+这也就是vue+better-scroll省心的地方, 关于dot这块不用过多操作
