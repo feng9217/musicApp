@@ -96,6 +96,8 @@ _play()执行的就是滚动到下一页的操作, 每次执行, let pageIndex =
 
 ***
 这样就完成了轮播操作, 其实整个 slider 部分都是可以封装起来复用的, 只要传入想要轮播的数据就OK。  
+PS: 当前项目用的 better-scroll 版本为 '0.1.X' , 在 better-scroll 正式版本 '1.X.X' 中, snap已经由Boolean改成了Object, 具体参考其API文档中slider的部分:  
+https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/slide/slide.vue  
 
 <h4>dots区块</h4>
 
