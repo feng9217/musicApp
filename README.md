@@ -93,7 +93,13 @@ param就是控制滚动的参数
 _play()执行的就是滚动到下一页的操作, 每次执行, let pageIndex = this.currentPageIndex + 1, 在loop模式下, pageIndex += 1  
 之后使用一个 this.timer = setTimeout( () => {}, this.interval )  
 回调函数中, 执行了better-scroll的方法: goToPage(pageIndex, 0, 400) 对应的是: (X, Y, 切换时间)  
-
+  
+还有一个功能上的完善, 就是在改变视窗大小的时候, slider组件还能正常工作, 则要对之前设置的宽/高进行更新  
+实现这个功能就需要对改变视窗大小的事件进行监听:  
+<strong>window.addEventListener('resize', () => {})</strong>  
+在回调中, 执行了this._setSliderWidth()方法, 但和初始化不同, 不能在 this.loop === true 时继续在两头添加宽度, 所以设置了一个标志位 isResize 进行判断  
+重新设置好宽后, 使用better-scroll方法: this.slider.refresh() 就会对宽/高重新计算  
+  
 ***
 这样就完成了轮播操作, 其实整个 slider 部分都是可以封装起来复用的, 只要传入想要轮播的数据就OK。  
 PS: 当前项目用的 better-scroll 版本为 '0.1.X' , 在 better-scroll 正式版本 '1.X.X' 中, snap已经由Boolean改成了Object, 具体参考其API文档中slider的部分:  
@@ -112,4 +118,7 @@ https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/slid
   
 当轮播图滚动, 会给对应的dot绑定上 active 样式:  
 `:class="{active: currentPageIndex === index}"`  
-这也就是vue+better-scroll省心的地方, 关于dot这块不用过多操作
+这也就是vue+better-scroll省心的地方, 关于dot这块不用过多操作  
+  
+***
+_<h2>RecommendList part</h2>_
