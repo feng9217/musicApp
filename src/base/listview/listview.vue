@@ -172,7 +172,7 @@
         // 左边每组元素的高度
         const list = this.$refs.listGroup
         let height = 0
-        this.listHeight.push(height)
+        // this.listHeight.push(height)
         for (let i = 0; i < list.length; i++) {
           let item = list[i]
           // DOM接口

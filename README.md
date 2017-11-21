@@ -8,8 +8,8 @@ _<h1>App页</h1>_
 _<h2>结构</h2>_
 
 ***
-App > [ m-header + ( tab > recommend + singer + rank + search ) ]
-
+App > [ m-header + ( tab > recommend + singer + rank + search ) ]  
+  
 _<h1>Recommend页</h1>_
 
 ***
@@ -54,10 +54,10 @@ div.slider-wrapper v-if > div.slider = new BS(el, { param }) > div.sliderGroup >
 div.sliderGroup{ position: relative } > div.dots > span.dot v-for="(item, index) in dots"
 括号内就是 slot 的内容  
   
-<h3>功能实现</h3>
-
-<h4>slider轮播图</h4>
-
+<h3>功能实现</h3>  
+  
+<h4>slider轮播图</h4>  
+  
 之后通过 this.recommends = res.data.slider 接收返回的数据进行遍历
 而 slider.vue 的<strong>轮播滑动效果 是通过第三方库 better-scroll 实现的, 使用该库的关键点是初始化时计算的高度和宽度要正确, 即渲染时机要正确,</strong> 所以要:  
   mounted() {  
@@ -121,4 +121,38 @@ https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/slid
 这也就是vue+better-scroll省心的地方, 关于dot这块不用过多操作  
   
 ***
-_<h2>RecommendList part</h2>_
+_<h2>RecommendList part</h2>_  
+---
+<h3>数据来源/处理</h3>  
+***
+api: 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg'
+推荐列表RecommendList的实现, 倒是挺简单的。  
+  
+<h3>结构</h3>  
+***
+对获取回来的数据进行遍历, 结构为:  
+div.recommend-list > ul > li v-for="item in discList"  
+  
+<h3>功能实现</h3>  
+
+在数据渲染时, 注意有些文本需要使用v-html, 同时使用了lazy-load对图片实现了懒加载。  
+  
+当点击item时, 会执行绑定的函数: @click="selecItem(item)"  
+判断点击的是哪个item, 同时进行路由跳转:  
+this.$router.push({  
+  path: `/recommend/${item.dissid}`  
+})  
+页面跳转到选中的推荐歌单中  
+  
+同时为了使屏幕能滚动而又不使用 overflow: auto 出现原生的滚动条, 使用了一个第三方库 better-scroll 封装成了一个滚动组件包裹需要滚动的部分  
+又由于better-scroll只有第一个子元素才能滚动, 所以用了一个大的div把 slider + recommend-list 都包裹在一起  
+  
+_<h1>Singer页</h1>_
+
+***
+_<h2>结构</h2>_
+  
+***
+实现 list-view 及 singer 联动(类通讯录组件)  
+先在遍历的时候赋予一个 data-index="index" 属性  
+同时给scroll组件扩展两个方法, scrollTo() 和 scrollToElement()
