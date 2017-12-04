@@ -1,6 +1,47 @@
+# music-app-demo
+
+> A Vue.js project
+
+## Build Setup
+
+# install dependencies
+npm install
+
+# serve with hot reload at localhost:8080
+npm run dev
+
+# build for production with minification
+npm run build
+
+# build for production and view the bundle analyzer report
+npm run build --report
+
+For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).  
+
 唉 不得不说 撸这个仿App页面真的要学太多东西
 不过不得不说SPA真是厉害
 丢给别人一个页面总比丢给别人一个App更容易接受吧????
+
+推荐页组件演示:  
+![image](https://github.com/feng9217/musicApp/blob/master/demoGif/%E6%8E%A8%E8%8D%90%E9%A1%B5.gif)  
+
+歌手页组件演示:  
+![image](https://github.com/feng9217/musicApp/blob/master/demoGif/%E6%AD%8C%E6%89%8B%E9%A1%B5.gif)  
+
+歌手详情页组件演示:  
+![image](https://github.com/feng9217/musicApp/blob/master/demoGif/%E6%AD%8C%E6%89%8B%E9%A1%B5-%E8%AF%A6%E6%83%85%2B%E6%92%AD%E6%94%BE.gif)  
+
+排行页组件演示:  
+![image](https://github.com/feng9217/musicApp/blob/master/demoGif/%E6%8E%92%E8%A1%8C%2B%E6%92%AD%E6%94%BE.gif)  
+
+搜索页组件演示:  
+![image](https://github.com/feng9217/musicApp/blob/master/demoGif/%E6%90%9C%E7%B4%A2%2B%E6%92%AD%E6%94%BE.gif)  
+
+mini播放组件演示:  
+![image](https://github.com/feng9217/musicApp/blob/master/demoGif/mini%E6%92%AD%E6%94%BE%E6%8E%A7%E5%88%B6%E5%8F%B0.gif)  
+
+个人中心页组件演示:  
+![image](https://github.com/feng9217/musicApp/blob/master/demoGif/%E4%B8%AA%E4%BA%BA%E4%B8%AD%E5%BF%83.gif)  
 
 _<h1>App页</h1>_
 
