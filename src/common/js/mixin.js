@@ -18,7 +18,7 @@ export const playlistMixin = {
   activated() {
     this.handlePlaylist(this.playlist)
   },
-  method: {
+  methods: {
     handlePlaylist() {
       throw new Error('component must implement handlePlaylist method')
     }
